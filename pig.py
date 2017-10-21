@@ -63,18 +63,16 @@ class Player(object):
             try:
                 action = int(input(" Enter '1' to Roll, or '0' to Hold? "))
             except:
+
                 SyntaxError, ValueError
-              
            
             return action
 
     def __str__(self):
         return str(self.name) + ": " + str(self.score)
 
-
 class ComputerPlayer(Player):
     cpu_names=[]
-
 
     def __init__(self, number):
         name = 'Compu {}'.format(number)
@@ -104,18 +102,16 @@ class HumanPlayer(Player):
                     return True
                 if human_decision == 0:
                     return False
-             
-            except (SyntaxError, ValueError):
-                continue
+            except:
+                SyntaxError, ValueError
                 
-                          
-      
 class Game:
     def __init__(self,player1,player2):
         self.players = []
         self.human = HumanPlayer(Player)
         self.compu = ComputerPlayer(Player)
-        
+        self.score_holder = ScoreHolder()
+        self.dice = Dice()
         for i in range(player1):
             player_name = raw_input('Enter name of player number. {}: '.format(i+1))
             if player_name == '':
@@ -124,11 +120,6 @@ class Game:
         for i in range(player2):
             self.players.append(ComputerPlayer(i+1))
         self.number_of_players = len(self.players)
-        self.dice = Dice()
-        self.score_holder = ScoreHolder()
-
-
-
     def objective(self):
 
         print("*" * 70)
@@ -205,6 +196,7 @@ class Game:
             self.score_holder.reset_score()
             return False
 def main():
+
     print "Welcome to Pig"
     human = None
     compu = None
@@ -212,6 +204,7 @@ def main():
         human = number_of_players('How many humans are playing today? ')
         compu = number_of_players('How many computers are playing today? ')
     game = Game(human, compu)
+
     game.play_game()
 
 if __name__ == '__main__':
