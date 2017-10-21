@@ -1,14 +1,15 @@
 import random
 import sys
 
-def number_of_players(message):
+def number_of_players():
     while True:
-        try:
-            number = int(input(message))
-        except(SyntaxError, ValueError):
-            continue
+            try:
+                number = int(input('Please enter the number of players: '))
                 
-        return number
+            except(SyntaxError, ValueError):
+                continue
+                    
+            return number
 
 
 class RolledOneException(Exception):
@@ -63,63 +64,39 @@ class Player(object):
             try:
                 action = int(input(" Enter '1' to Roll, or '0' to Hold? "))
             except:
-
-                SyntaxError, ValueError
+                SyntaxError, ValueError          
            
             return action
 
     def __str__(self):
         return str(self.name) + ": " + str(self.score)
 
-class ComputerPlayer(Player):
-    cpu_names=[]
-
-    def __init__(self, number):
-        name = 'Compu {}'.format(number)
-
-        super(ComputerPlayer, self).__init__(name)
-
-
     def keep_rolling(self, score_holder):
-        while score_holder.value < (25 or 100-score_holder.value):
-            print('  {} will roll again.'.format(self.name))
-            return True
-        print('  {} will hold.'.format(self.name))
-        return False
-
-
-class HumanPlayer(Player):
-    def __init__(self, name):
-        super(HumanPlayer, self).__init__(name)
-
-
-    def keep_rolling(self, score_holder):
-        human_decision = None
-        while human_decision != 0 or human_decision != 1:
+        decision = None
+        while decision != 0 or decision != 1:
             try:
-                human_decision = Player().action(" Enter '1' to Roll, or '0' to Hold? ", 0, 1)
-                if human_decision == 1:
+                decision = Player().action(" Enter '1' to Roll, or '0' to Hold? ", 0, 1)
+                if decision == 1:
                     return True
-                if human_decision == 0:
+                if decision == 0:
                     return False
-            except:
-                SyntaxError, ValueError
-                
+             
+            except (SyntaxError, ValueError):
+                continue
+
 class Game:
-    def __init__(self,player1,player2):
+    def __init__(self, players):
         self.players = []
-        self.human = HumanPlayer(Player)
-        self.compu = ComputerPlayer(Player)
-        self.score_holder = ScoreHolder()
-        self.dice = Dice()
-        for i in range(player1):
+        for i in range(players):
             player_name = raw_input('Enter name of player number. {}: '.format(i+1))
             if player_name == '':
                 player_name = 'Player {}'.format(i+1)
-            self.players.append(HumanPlayer(player_name))
-        for i in range(player2):
-            self.players.append(ComputerPlayer(i+1))
+            self.players.append(Player(player_name))
         self.number_of_players = len(self.players)
+        self.dice = Dice()
+        self.score_holder = ScoreHolder()
+
+
     def objective(self):
 
         print("*" * 70)
@@ -196,18 +173,13 @@ class Game:
             self.score_holder.reset_score()
             return False
 def main():
-
-    print "Welcome to Pig"
-    human = None
-    compu = None
-    while human <= 0 and compu <=0:
-        human = number_of_players('How many humans are playing today? ')
-        compu = number_of_players('How many computers are playing today? ')
-    game = Game(human, compu)
-
+    players = None
+    while players <= 1:
+        print "Players must be two or more..."
+        players = number_of_players()
+        
+    game = Game(players)
     game.play_game()
 
 if __name__ == '__main__':
-    main()
-  
-            
+    main()            
